@@ -13,12 +13,17 @@ def make_turn(group):
 
 def file_to_students(file):
     df = pd.read_csv(file, index_col=False)
-    df.columns = ['nombre_completo', 'grupo' 'matricula']
-    
+
+    #print(df.head())
+    df.columns = ['apellido_paterno', 'apellido_materno', 'nombres', 'grupo', 'matricula']
     df['turno'] = df['grupo'].apply(make_turn)
 
-    for column in ['nombre_completo']:
+    for column in ['nombres', 'apellido_paterno', 'apellido_materno']:
         df[column] = df[column].apply(remove_accents).str.upper()
 
+    #name_data = df['nombre_completo'].apply(separate_name)
+    #df = pd.concat([df.drop(['nombre_completo'], axis=1), name_data.apply(pd.Series)], axis=1)
+
+    print(df.head())
     dict = df.to_dict('records')
     return dict

@@ -2,7 +2,9 @@ from django.db import models
 
 # Create your models here.
 class Student(models.Model):
-    nombre_completo = models.CharField(max_length=200)
+    apellido_materno = models.CharField(max_length=200, null=True)
+    apellido_paterno = models.CharField(max_length=200, null=True)
+    nombres = models.CharField(max_length=200, null=True)
     grupo = models.CharField(max_length=50)
     paraescolar = models.CharField(max_length=200, null=True)
     matricula = models.CharField(max_length=30)
