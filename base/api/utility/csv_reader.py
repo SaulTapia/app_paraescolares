@@ -14,11 +14,11 @@ def make_turn(group):
 def file_to_students(file):
     df = pd.read_csv(file, index_col=False)
     
-    print(df.head())
+    #print(df.head())
     
-    df.columns = ['nombre_completo', 'grupo' 'matricula']
-    
-    df['turno'] = df['grupo'].apply(make_turn)
+    df.columns = ['nombre_completo', 'grupo', 'matricula']   
+    df['turno'] = df['grupo'].apply(make_turn)    
+    #print(df.head())
 
     for column in ['nombre_completo']:
         df[column] = df[column].apply(remove_accents).str.upper()
