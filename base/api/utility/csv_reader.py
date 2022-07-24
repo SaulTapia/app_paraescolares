@@ -21,9 +21,11 @@ def file_to_students(file):
     for column in ['nombres', 'apellido_paterno', 'apellido_materno']:
         df[column] = df[column].apply(remove_accents).str.upper()
 
+    df['nombre_completo'] = df['apellido_paterno'] + ' ' + df['apellido_materno'] + ' ' + df['nombres']
+    df = df.drop(['apellido_materno', 'apellido_paterno', 'nombres'], axis = 1)
     #name_data = df['nombre_completo'].apply(separate_name)
     #df = pd.concat([df.drop(['nombre_completo'], axis=1), name_data.apply(pd.Series)], axis=1)
-
-    print(df.head())
+    
+    #print(df.head())
     dict = df.to_dict('records')
     return dict
