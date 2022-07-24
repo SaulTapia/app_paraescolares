@@ -112,11 +112,11 @@ WSGI_APPLICATION = 'app_paraescolares.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
-DATABASE_NAME = os.environ['DATABASE_NAME']
-DATABASE_USER = os.environ['DATABASE_USER']
-DATABASE_PASSWORD = os.environ['DATABASE_PASSWORD']
-DATABASE_HOST = os.environ['DATABASE_HOST']
-DATABASE_PORT = os.environ['DATABASE_PORT']
+#DATABASE_NAME = os.environ['DATABASE_NAME']
+#DATABASE_USER = os.environ['DATABASE_USER']
+#DATABASE_PASSWORD = os.environ['DATABASE_PASSWORD']
+#DATABASE_HOST = os.environ['DATABASE_HOST']
+#DATABASE_PORT = os.environ['DATABASE_PORT']
 
 
 
