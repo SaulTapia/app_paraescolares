@@ -13,4 +13,5 @@ urlpatterns = [
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
     path('students/', views.getStudents),
     re_path(r'^students/upload/(?P<filename>[^/]+)$', views.FileUploadView.as_view()),
+    path('wake/', views.wakeView),
 ]

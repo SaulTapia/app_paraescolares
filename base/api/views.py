@@ -64,3 +64,6 @@ class FileUploadView(api_views.APIView):
         obj_list = [models.Student(**student_dict) for student_dict in student_list]
         objs = models.Student.objects.bulk_create(obj_list)
         return Response(status=204)
+@api_view(['GET'])
+def wakeView(request):
+    return Response()

@@ -17,7 +17,10 @@ SECRET_KEY = os.environ['SECRET_KEY']
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['app-paraescolares.herokuapp.com']
+ALLOWED_HOSTS = [
+    'app-paraescolares.herokuapp.com',
+    '127.0.0.1',
+]
 
 
 
