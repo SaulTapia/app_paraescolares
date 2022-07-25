@@ -8,7 +8,7 @@ API en django para app manejo de paraescolares
 | /api/token                         | POST    |Username, password        |Refresh & access tokens       |
 | /api/token/refresh                 | POST    |Refresh token             |Refresh & access tokens       |
 | /api/students                      | GET     |Access token              |Array de todos los estudiantes|
-| /api/students/upload/<archivo.csv> | PUT     |Access token & archivo.csv|200 OK / 101 Permission Denied|
+| /api/students/upload/<archivo.csv> | PUT     |Access token & archivo.csv|200 OK / 401 Unauthorized     |
 
 # Formato de archivos .csv
 ```apellido_paterno,apellido_materno,nombres,grupo,matricula```
