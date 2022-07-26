@@ -76,7 +76,7 @@ class FileUploadView(api_views.APIView):
 def wakeView(request):
     return Response()
 
-@api_view(['POST'])
+@api_view(['GET'])
 def validateView(request):
     try:        
         data = request.data
@@ -126,7 +126,7 @@ def selectView(request):
     except:
         return Response(status=400)
 
-@api_view(['POST'])
+@api_view(['PUT'])
 def removeView(request):
     try:
         data = request.data
