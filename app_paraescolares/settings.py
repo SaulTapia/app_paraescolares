@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt.token_blacklist',
     'corsheaders',
+    'django_email_verification',
 ]
 
 REST_FRAMEWORK = {
@@ -179,3 +180,28 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:8080",
     #"http://127.0.0.1:9000",
 ]
+
+
+
+#def verified_callback(user):
+    #user.is_active = True
+
+    
+
+#EMAIL_VERIFIED_CALLBACK = verified_callback
+#EMAIL_FROM_ADDRESS = 'noreply@aliasaddress.com'
+#EMAIL_MAIL_SUBJECT = 'Confirm your email'
+#EMAIL_MAIL_HTML = 'mail_body.html'
+#EMAIL_MAIL_PLAIN = 'mail_body.txt'
+#EMAIL_TOKEN_LIFE = 60 * 60
+#EMAIL_PAGE_TEMPLATE = 'confirm_template.html'
+#EMAIL_PAGE_DOMAIN = 'http://mydomain.com/'
+#EMAIL_MULTI_USER = True  # optional (defaults to False)
+
+# For Django Email Backend
+#EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+#EMAIL_HOST = 'smtp.gmail.com'
+#EMAIL_PORT = 587
+#EMAIL_HOST_USER = 'mymail@gmail.com'
+#EMAIL_HOST_PASSWORD = 'mYC00lP4ssw0rd'  # os.environ['password_key'] suggested
+#EMAIL_USE_TLS = True

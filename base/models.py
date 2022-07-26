@@ -7,6 +7,8 @@ class Student(models.Model):
     paraescolar = models.CharField(max_length=200, null=True)
     matricula = models.CharField(max_length=30)
     turno = models.CharField(max_length=50)
+    turno = models.CharField(max_length=50)
+    tiene_paraescolar = models.BooleanField(default=False)
     
 
 

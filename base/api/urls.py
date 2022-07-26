@@ -14,4 +14,7 @@ urlpatterns = [
     path('students/', views.getStudents),
     re_path(r'^students/upload/(?P<filename>[^/]+)$', views.FileUploadView.as_view()),
     path('wake/', views.wakeView),
+    path('select/', views.selectView),
+    path('select/validate/', views.validateView),
+    path('select/remove/', views.removeView),
 ]
