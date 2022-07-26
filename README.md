@@ -5,11 +5,14 @@ API en django para app manejo de paraescolares
 
 | Endpoint                           | Método  | Recibe                   | Regresa                      |
 | ---------------------------------- |:-------:|:------------------------:|:----------------------------:|
-| /api/token                         | POST    |Username, password        |Refresh & access tokens       |
+| /api/token                         | POST    |username, password        |Refresh & access tokens       |
 | /api/token/refresh                 | POST    |Refresh token             |Refresh & access tokens       |
 | /api/students                      | GET     |Access token              |Array de todos los estudiantes|
 | /api/students/upload/<archivo.csv> | PUT     |Access token & archivo.csv|200 OK / 401 Unauthorized     |
 | /api/wake/                         | GET     |                          |200 OK                        |
+| /api/select/                       | POST    |nombres, apellido_paterno, apellido_materno, matricula, elección|200 OK / 404 not found|
+| /api/select/validate/              | GET    |nombres, apellido_paterno, apellido_materno, matricula|200 OK / 404 not found|
+| /api/select/remove/ <br />(DEBUG, QUITAR ANTES DE PRODUCCIÓN)  | PUT    |nombres, apellido_paterno, apellido_materno, matricula|200 OK / 404 not found|
 
 # Formato de archivos .csv
 ```apellido_paterno,apellido_materno,nombres,grupo,matricula```
