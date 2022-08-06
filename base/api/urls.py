@@ -17,4 +17,17 @@ urlpatterns = [
     path('select/', views.selectView),
     path('select/validate/', views.validateView),
     path('select/remove/', views.removeView),
+    
+    path('xlsx/group/', views.xlsxGroupView),
+    path('xlsx/paraescolar/', views.xlsxParaescolarView),
+
+    path('list/group/', views.getGroupList),
+    path('list/paraescolar/', views.getParaescolarList),
+
+    path('paraescolares/get/', views.getParaescolarView),
+    path('paraescolares/getall/', views.getAllParaescolarView),
+    path('paraescolares/make/', views.makeParaescolarView),
+    path('paraescolares/change/', views.changeParaescolarView),
+    path('paraescolares/delete/', views.deleteParaescolarView),
+
 ]
