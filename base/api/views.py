@@ -67,7 +67,7 @@ class FileUploadView(api_views.APIView):
     parser_classes = [FileUploadParser]
     permission_classes = [IsAuthenticated]
 
-    def put(self, request, filename, format=None):
+    def patch(self, request, filename, format=None):
         file_obj = request.data['file']
         student_list = file_to_students(file_obj)
         obj_list = [models.Student(**student_dict) for student_dict in student_list]
@@ -148,7 +148,7 @@ def selectView(request):
         print(e)
         return Response(status=400)
 
-@api_view(['PUT'])
+@api_view(['PATCH'])
 def removeView(request):
     try:
         data = request.data
@@ -279,7 +279,7 @@ def getAllParaescolarView(request):
     return Response(obj.data)
 
 
-@api_view(['PUT'])
+@api_view(['PATCH'])
 @permission_classes([IsAuthenticated])
 def changeParaescolarView(request):
     data = request.data
