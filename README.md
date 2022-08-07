@@ -11,12 +11,12 @@ API en django para app manejo de paraescolares
 | /api/students/upload/<archivo.csv> | PUT     |Access token & archivo.csv|200 OK / 401 Unauthorized     |Sí
 | /api/wake/                         | GET     |                          |200 OK                        |No
 | /api/select/                       | POST    |nombres, apellido_paterno, apellido_materno, matricula, elección|200 OK / 404 not found|No|
-| /api/select/validate/              | GET     |nombres, apellido_paterno, apellido_materno, matricula|200 OK / 404 not found|No|
+| /api/select/validate/              | POST     |nombres, apellido_paterno, apellido_materno, matricula|200 OK / 404 not found|No|
 | /api/select/remove/ <br />(DEBUG, QUITAR ANTES DE PRODUCCIÓN)  | PUT    |nombres, apellido_paterno, apellido_materno, matricula|200 OK / 404 not found|No|
-| /api/xlsx/group/                   | GET     |grupo                     |Xlsx con alumnos del grupo    |Sí|
-| /api/xlsx/paraescolar/             | GET     |nombre, turno             |Xlsx con alumnos de la paraescolar|Sí|
-| /api/list/group/                   | GET     |grupo                     |Array con alumnos del grupo   |Sí|
-| /api/list/paraescolar/             | GET     |nombre, turno             |Array con alumnos de la paraescolar|Sí|
+| /api/xlsx/group/                   | POST     |grupo                     |Xlsx con alumnos del grupo    |Sí|
+| /api/xlsx/paraescolar/             | POST     |nombre_paraescolar, turno             |Xlsx con alumnos de la paraescolar|Sí|
+| /api/list/group/                   | POST     |grupo                     |Array con alumnos del grupo   |Sí|
+| /api/list/paraescolar/             | POST     |nombre_paraescolar, turno             |Array con alumnos de la paraescolar|Sí|
 | /api/paraescolares/getall/         | GET     |                          |Array con datos de todas las paraescolares|Sí|
 | /api/paraescolares/make/           | POST    |nombre, turno, cupo_total |200 OK                        |Sí|
 | /api/paraescolares/delete/         | DELETE  |nombre, turno             |200 OK                        |Sí|
