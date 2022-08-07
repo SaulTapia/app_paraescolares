@@ -8,11 +8,11 @@ API en django para app manejo de paraescolares
 | /api/token                         | POST    |username, password        |Refresh & access tokens       |No
 | /api/token/refresh                 | POST    |Refresh token             |Refresh & access tokens       |No
 | /api/students                      | GET     |Access token              |Array de todos los estudiantes|Sí
-| /api/students/upload/<archivo.csv> | PUT     |Access token & archivo.csv|200 OK / 401 Unauthorized     |Sí
+| /api/students/upload/<archivo.csv> | PATCH   |Access token & archivo.csv|200 OK / 401 Unauthorized     |Sí
 | /api/wake/                         | GET     |                          |200 OK                        |No
 | /api/select/                       | POST    |nombres, apellido_paterno, apellido_materno, matricula, elección|200 OK / 404 not found|No|
 | /api/select/validate/              | POST     |nombres, apellido_paterno, apellido_materno, matricula|200 OK / 404 not found|No|
-| /api/select/remove/ <br />(DEBUG, QUITAR ANTES DE PRODUCCIÓN)  | PUT    |nombres, apellido_paterno, apellido_materno, matricula|200 OK / 404 not found|No|
+| /api/select/remove/ <br />(DEBUG, QUITAR ANTES DE PRODUCCIÓN)  | PATCH    |nombres, apellido_paterno, apellido_materno, matricula|200 OK / 404 not found|No|
 | /api/xlsx/group/                   | POST     |grupo                     |Xlsx con alumnos del grupo    |Sí|
 | /api/xlsx/paraescolar/             | POST     |nombre_paraescolar, turno             |Xlsx con alumnos de la paraescolar|Sí|
 | /api/list/group/                   | POST     |grupo                     |Array con alumnos del grupo   |Sí|
