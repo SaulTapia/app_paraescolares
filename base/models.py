@@ -15,10 +15,14 @@ class Student(models.Model):
         return self.nombre_completo
 
 class Paraescolar(models.Model):    
-    nombre = models.CharField(max_length=200, null=False, unique=True)
+    nombre = models.CharField(max_length=200, null=False)
     turno = models.CharField(max_length=30, null=False)
     cupo_total = models.IntegerField(null=False)
     alumnos_inscritos = models.IntegerField(null=False)
 
+
     def __str__(self):
         return self.nombre
+
+    class Meta:
+        unique_together = ('nombre', 'turno',)
