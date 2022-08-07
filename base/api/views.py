@@ -257,7 +257,6 @@ def makeParaescolarView(request):
 
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
 def getParaescolarView(request):
     print('Begin request')
     data = request.data
@@ -272,7 +271,6 @@ def getParaescolarView(request):
 
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
 def getAllParaescolarView(request):
 
     para = models.Paraescolar.objects.all()
