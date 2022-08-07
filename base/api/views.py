@@ -268,7 +268,7 @@ def getParaescolarView(request):
     para = models.Paraescolar.objects.get(nombre=paraescolar, turno=turno)
     obj = ParaescolarSerializer(para)
 
-    return obj.data
+    return Response(obj.data)
 
 
 @api_view(['GET'])
@@ -290,6 +290,10 @@ def changeParaescolarView(request):
     turno = data['turno']
     
     models.Paraescolar.objects.filter(nombre=paraescolar, turno=turno).update(nombre=nuevo_nombre)
+
+    students = models.Student.objects.filter(paraescolar=paraescolar, turno=turno)
+    students.update(paraescolar=nuevo_nombre)
+    
         
     return Response()
 
