@@ -305,6 +305,10 @@ def deleteParaescolarView(request):
     paraescolar = data['nombre']
     turno = data['turno']
     models.Paraescolar.objects.filter(nombre=paraescolar, turno=turno).delete()
+
+    students = models.Student.objects.filter(paraescolar=paraescolar, turno=turno)
+    students.update(paraescolar=None, tiene_paraescolar=False)
+
     
     return Response()
 
