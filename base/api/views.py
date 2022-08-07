@@ -78,7 +78,7 @@ class FileUploadView(api_views.APIView):
 def wakeView(request):
     return Response()
 
-@api_view(['GET'])
+@api_view(['POST'])
 def validateView(request):
     try:        
         data = request.data
@@ -193,7 +193,7 @@ def removeView(request):
         return Response(status=400)
 
 
-@api_view(['GET'])
+@api_view(['POST'])
 #@permission_classes([IsAuthenticated])
 def xlsxParaescolarView(request):
     data = request.data
@@ -219,7 +219,7 @@ def xlsxParaescolarView(request):
     return response
 
 
-@api_view(['GET'])
+@api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def xlsxGroupView(request):
     data = request.data
@@ -256,7 +256,7 @@ def makeParaescolarView(request):
     return Response()
 
 
-@api_view(['GET'])
+@api_view(['POST'])
 def getParaescolarView(request):
     print('Begin request')
     data = request.data
@@ -310,7 +310,7 @@ def deleteParaescolarView(request):
     
     return Response()
 
-@api_view(['GET'])
+@api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def getGroupList(request):
     data = request.data
@@ -322,7 +322,7 @@ def getGroupList(request):
 
     return Response(res)
 
-@api_view(['GET'])
+@api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def getParaescolarList(request):
     data = request.data
