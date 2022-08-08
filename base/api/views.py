@@ -13,7 +13,7 @@ from .utility.csv_reader import file_to_students
 from .utility.csv_reader import remove_accents
 from .utility.xlsx import xlsx_grupos, xlsx_paraescolares
 
-from django.http import FileResponse
+from django.http import FileResponse, JsonResponse
 from rest_framework import viewsets, renderers
 from rest_framework.decorators import action
 
@@ -72,11 +72,11 @@ class FileUploadView(api_views.APIView):
         student_list = file_to_students(file_obj)
         obj_list = [models.Student(**student_dict) for student_dict in student_list]
         objs = models.Student.objects.bulk_create(obj_list)
-        return Response(status=204)
+        return Response(status=200)
 
 @api_view(['GET'])
 def wakeView(request):
-    return Response()
+    return JsonResponse({'message' : 'OK'})
 
 @api_view(['POST'])
 def validateView(request):
@@ -86,7 +86,7 @@ def validateView(request):
         matricula = data['matricula']
 
         if not matricula.isdigit():
-            return Response(status=404)
+            return JsonResponse({'message' : 'Not Found'}, status=404)
 
         apellido_paterno = data['apellido_paterno']
         apellido_materno = data['apellido_materno']
@@ -98,11 +98,11 @@ def validateView(request):
 
         student = models.Student.objects.filter(nombre_completo=nombre, matricula=matricula)
         if student:
-            return Response()
+            return JsonResponse({'message' : 'OK'})
 
-        return Response(status=404)
+        return JsonResponse({'message' : 'Not Found'}, status=404)
     except:
-        return Response(status=400)
+        return JsonResponse({'message' : 'Not found'}, status=404)
 
 @api_view(['POST'])
 def selectView(request):
@@ -116,7 +116,7 @@ def selectView(request):
         eleccion = data['eleccion']
 
         if not matricula.isdigit():
-            return Response(status=404)
+            return JsonResponse({'message' : 'Not Found'}, status=404)
 
         nombre = apellido_paterno + ' ' + apellido_materno + ' ' + nombres
         nombre = remove_accents(nombre).upper()
@@ -139,14 +139,14 @@ def selectView(request):
                 student.save()
                 paraescolar.save()
 
-                return Response()
+                return JsonResponse({'message' : 'OK'})
 
-            return Response(status=400)
+            return JsonResponse({'message' : 'Not found'}, status=404)
 
-        return Response(status=404)
+        return JsonResponse({'message' : 'Not Found'}, status=404)
     except Exception as e:
         print(e)
-        return Response(status=400)
+        return JsonResponse({'message' : 'Not found'}, status=404)
 
 @api_view(['PATCH'])
 def removeView(request):
@@ -156,7 +156,7 @@ def removeView(request):
         matricula = data['matricula']
 
         if not matricula.isdigit():
-            return Response(status=404)
+            return JsonResponse({'message' : 'Not Found'}, status=404)
 
         if 'apellido_paterno' in data:
             apellido_paterno = data['apellido_paterno'] + ' '
@@ -185,12 +185,12 @@ def removeView(request):
             student.paraescolar = None
             student.tiene_paraescolar=False
             student.save()
-            return Response()   
+            return JsonResponse({'message' : 'OK'})   
 
-        return Response(status=404)
+        return JsonResponse({'message' : 'Not Found'}, status=404)
     except Exception as e:
         print(e)
-        return Response(status=400)
+        return JsonResponse({'message' : 'Not found'}, status=404)
 
 
 @api_view(['POST'])
@@ -253,7 +253,7 @@ def makeParaescolarView(request):
     newPara = models.Paraescolar(nombre=paraescolar, cupo_total=cupo, alumnos_inscritos=0, turno=turno)
     newPara.save()
 
-    return Response()
+    return JsonResponse({'message' : 'OK'})
 
 
 @api_view(['POST'])
@@ -293,7 +293,7 @@ def changeParaescolarView(request):
     students.update(paraescolar=nuevo_nombre)
     
         
-    return Response()
+    return JsonResponse({'message' : 'OK'})
 
 
 @api_view(['DELETE'])
@@ -308,7 +308,7 @@ def deleteParaescolarView(request):
     students.update(paraescolar=None, tiene_paraescolar=False)
 
     
-    return Response()
+    return JsonResponse({'message' : 'OK'})
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
