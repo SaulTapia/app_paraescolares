@@ -120,7 +120,7 @@ def validateView(request):
             obj = StudentSerializer(student)
             return Response(obj.data)
 
-        return JsonResponse({'message' : 'No se encontró un alumno con los datos proporcionados.'})
+        return JsonResponse({'message' : 'No se encontró el alumno con los datos proporcionados.'})
     except Exception as e:
         return JsonResponse({'message' : 'Ocurrió un error...',
                              'error' : str(e)
@@ -185,7 +185,7 @@ def selectView(request):
             else:
                 return JsonResponse({'message' : 'La paraescolar no existe!'})
 
-        return JsonResponse({'message' : 'No se encontró un alumno con los datos proporcionados'})
+        return JsonResponse({'message' : 'No se encontró el alumno con los datos proporcionados'})
     except Exception as e:
         print(e)
         return JsonResponse({'message' : 'Ocurrió un error...', 'error' : str(e)}, status=500)
