@@ -92,10 +92,12 @@ def validateView(request):
         if not matricula.isdigit():
             return JsonResponse({'message' : 'La matrícula solo puede contener números'}, status=404)
 
-        if 'apellido_paterno' in data:
+        if 'apellido_paterno' in data and data['apellido_paterno']:
             apellido_paterno = data['apellido_paterno'] + ' '
         else:
-            apellido_paterno = ''
+            return JsonResponse({'message' : 'Se necesita un apellido paterno.',
+                                'turno' : student.turno
+                                }, status=400)
 
         if 'apellido_materno' in data:
             apellido_materno = data['apellido_materno'] + ' '
@@ -137,10 +139,12 @@ def selectView(request):
         if not matricula.isdigit():
             return JsonResponse({'message' : 'La matrícula solo puede contener números'}, status=404)
 
-        if 'apellido_paterno' in data:
+        if 'apellido_paterno' in data and data['apellido_paterno']:
             apellido_paterno = data['apellido_paterno'] + ' '
         else:
-            apellido_paterno = ''
+            return JsonResponse({'message' : 'Se necesita un apellido paterno.',
+                                'turno' : student.turno
+                                }, status=400)
 
         if 'apellido_materno' in data:
             apellido_materno = data['apellido_materno'] + ' '
