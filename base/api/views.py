@@ -111,17 +111,19 @@ def validateView(request):
 
         #print(f'nombre: {nombre}, matrícula: {matricula}')
 
-        student = models.Student.objects.get(nombre_completo=nombre, matricula=matricula)
+        try:
+            student = models.Student.objects.get(nombre_completo=nombre, matricula=matricula)
+        except:
+            student = None
+
         if student:
             obj = StudentSerializer(student)
             return Response(obj.data)
 
-        return JsonResponse({'message' : 'No se encontró un alumno con los datos proporcionados.',
-                                'turno' : student.turno
-                    }, status=404)
+        return JsonResponse({'message' : 'No se encontró un alumno con los datos proporcionados.'})
     except Exception as e:
         return JsonResponse({'message' : 'Ocurrió un error...',
-                                'turno' : student.turno, 'error' : str(e)
+                             'error' : str(e)
                     }, status=500)
 
 @api_view(['POST'])
