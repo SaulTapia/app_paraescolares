@@ -183,7 +183,7 @@ def selectView(request):
                 else: 
                     return JsonResponse({'error' : 'Las paraescolares seleccionadas ya no cuentan con espacio.'})
             else:
-                return JsonResponse({'message' : 'La paraescolar no existe!'})
+                return JsonResponse({'error' : 'La paraescolar no existe!'})
 
         return JsonResponse({'error' : 'No se encontró el alumno con los datos proporcionados'})
     except Exception as e:
@@ -356,7 +356,7 @@ def changeParaescolarView(request):
             
         return JsonResponse({'message' : f'La paraescolar {paraescolar} fue cambiada a {nuevo_nombre} exitosamente!'})
     except Exception as e:
-        return JsonResponse({'message' : 'Ocurrió un error...', 'error' : str(e)}, status=500)
+        return JsonResponse({'error' : str(e)}, status=500)
 
 
 @api_view(['DELETE'])
