@@ -163,8 +163,9 @@ def selectView(request):
             student = None    
         
         if student:
-            if student.tiene_paraescolar == True:
+            if student.tiene_paraescolar:
                 return JsonResponse({'error' : f'El alumno ya está inscrito en la paraescolar {student.paraescolar}'})
+                
             print(student.turno)
             paraescolar = models.Paraescolar.objects.get(nombre=eleccion, turno=student.turno)
             print('aaaaaaaa')
