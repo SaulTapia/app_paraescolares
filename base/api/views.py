@@ -90,14 +90,14 @@ def validateView(request):
 
 
         if not matricula.isdigit():
-            return JsonResponse({'message' : 'La matrícula solo puede contener números'}, status=404)
+            return JsonResponse({'message' : 'La matrícula solo puede contener números'})
 
         if 'apellido_paterno' in data and data['apellido_paterno']:
             apellido_paterno = data['apellido_paterno'] + ' '
         else:
             return JsonResponse({'message' : 'Se necesita un apellido paterno.',
                                 'turno' : student.turno
-                                }, status=400)
+                                })
 
         if 'apellido_materno' in data:
             apellido_materno = data['apellido_materno'] + ' '
@@ -138,14 +138,14 @@ def selectView(request):
         eleccion = data['eleccion']
 
         if not matricula.isdigit():
-            return JsonResponse({'message' : 'La matrícula solo puede contener números'}, status=404)
+            return JsonResponse({'message' : 'La matrícula solo puede contener números'})
 
         if 'apellido_paterno' in data and data['apellido_paterno']:
             apellido_paterno = data['apellido_paterno'] + ' '
         else:
             return JsonResponse({'message' : 'Se necesita un apellido paterno.',
                                 'turno' : student.turno
-                                }, status=400)
+                                })
 
         if 'apellido_materno' in data:
             apellido_materno = data['apellido_materno'] + ' '
@@ -159,8 +159,10 @@ def selectView(request):
 
         print(f'nombre: {nombre}, matrícula: {matricula}')
 
-        student = models.Student.objects.get(nombre_completo=nombre, matricula=matricula, tiene_paraescolar=False)
-                
+        try:
+            student = models.Student.objects.get(nombre_completo=nombre, matricula=matricula, tiene_paraescolar=False)
+        except:
+            student = None    
         
         if student:
             print(student.turno)
@@ -179,11 +181,11 @@ def selectView(request):
 
                     return JsonResponse({'message' : 'La selección fue exitosa!'})
                 else: 
-                    return JsonResponse({'message' : 'La paraescolar seleccionada ya está llena'}, status=404)
+                    return JsonResponse({'message' : 'La paraescolar seleccionada ya está llena'})
             else:
-                return JsonResponse({'message' : 'La paraescolar no existe!'}, status=404)
+                return JsonResponse({'message' : 'La paraescolar no existe!'})
 
-        return JsonResponse({'message' : 'No se encontró un alumno con los datos proporcionados'}, status=404)
+        return JsonResponse({'message' : 'No se encontró un alumno con los datos proporcionados'})
     except Exception as e:
         print(e)
         return JsonResponse({'message' : 'Ocurrió un error...', 'error' : str(e)}, status=500)
@@ -196,7 +198,7 @@ def removeView(request):
         matricula = data['matricula']
 
         if not matricula.isdigit():
-            return JsonResponse({'message' : 'La matrícula solo puede contener dígitos'}, status=404)
+            return JsonResponse({'message' : 'La matrícula solo puede contener dígitos'})
 
         if 'apellido_paterno' in data:
             apellido_paterno = data['apellido_paterno'] + ' '
@@ -227,7 +229,7 @@ def removeView(request):
             student.save()
             return JsonResponse({'message' : 'El alumno ya no tiene paraescolar.'})   
 
-        return JsonResponse({'message' : 'El alumno no existe!'}, status=404)
+        return JsonResponse({'message' : 'El alumno no existe!'})
     except Exception as e:
         print(e)
         return JsonResponse({'message' : 'Ocurrió un error...', 'error' : str(e)}, status=500)
