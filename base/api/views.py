@@ -68,11 +68,14 @@ class FileUploadView(api_views.APIView):
     permission_classes = [IsAuthenticated]
 
     def patch(self, request, filename, format=None):
-        file_obj = request.data['file']
-        student_list = file_to_students(file_obj)
-        obj_list = [models.Student(**student_dict) for student_dict in student_list]
-        objs = models.Student.objects.bulk_create(obj_list)
-        return Response(status=200)
+        try:
+            file_obj = request.data['file']
+            student_list = file_to_students(file_obj)
+            obj_list = [models.Student(**student_dict) for student_dict in student_list]
+            objs = models.Student.objects.bulk_create(obj_list)
+            return JsonResponse({'message' : 'Alumnos agregados con éxito!'})
+        except:
+            return JsonResponse({'message' : 'Hubo un problema agregando los alumnos.'})
 
 @api_view(['GET'])
 def wakeView(request):
@@ -83,26 +86,42 @@ def validateView(request):
     try:        
         data = request.data
         #print(data)
-        matricula = data['matricula']
+        matricula = str(data['matricula'])
+
 
         if not matricula.isdigit():
-            return JsonResponse({'message' : 'Not Found'}, status=404)
+            return JsonResponse({'message' : 'La matrícula solo puede contener números'}, status=404)
 
-        apellido_paterno = data['apellido_paterno']
-        apellido_materno = data['apellido_materno']
+        if 'apellido_paterno' in data:
+            apellido_paterno = data['apellido_paterno'] + ' '
+        else:
+            apellido_paterno = ''
+
+        if 'apellido_materno' in data:
+            apellido_materno = data['apellido_materno'] + ' '
+        else :
+            apellido_materno = ''
+
         nombres = data['nombres']
 
-        nombre = apellido_paterno + ' ' + apellido_materno + ' ' + nombres
+        nombre = apellido_paterno + apellido_materno + nombres
         nombre = remove_accents(nombre).upper()
+
         #print(f'nombre: {nombre}, matrícula: {matricula}')
 
         student = models.Student.objects.filter(nombre_completo=nombre, matricula=matricula)
         if student:
-            return JsonResponse({'message' : 'OK'})
+            return JsonResponse({'message' : 'La selección es válida',
+                                'turno' : student.turno
+                    })
 
-        return JsonResponse({'message' : 'Not Found'}, status=404)
+        return JsonResponse({'message' : 'No se encontró un alumno con los datos proporcionados.',
+                                'turno' : student.turno
+                    }, status=404)
     except:
-        return JsonResponse({'message' : 'Not found'}, status=404)
+        return JsonResponse({'message' : 'Ocurrió un error...',
+                                'turno' : student.turno
+                    }, status=400)
 
 @api_view(['POST'])
 def selectView(request):
@@ -116,10 +135,23 @@ def selectView(request):
         eleccion = data['eleccion']
 
         if not matricula.isdigit():
-            return JsonResponse({'message' : 'Not Found'}, status=404)
+            return JsonResponse({'message' : 'La matrícula solo puede contener números'}, status=404)
 
-        nombre = apellido_paterno + ' ' + apellido_materno + ' ' + nombres
+        if 'apellido_paterno' in data:
+            apellido_paterno = data['apellido_paterno'] + ' '
+        else:
+            apellido_paterno = ''
+
+        if 'apellido_materno' in data:
+            apellido_materno = data['apellido_materno'] + ' '
+        else :
+            apellido_materno = ''
+
+        nombres = data['nombres']
+
+        nombre = apellido_paterno + apellido_materno + nombres
         nombre = remove_accents(nombre).upper()
+
         print(f'nombre: {nombre}, matrícula: {matricula}')
 
         student = models.Student.objects.get(nombre_completo=nombre, matricula=matricula, tiene_paraescolar=False)
@@ -130,23 +162,26 @@ def selectView(request):
             paraescolar = models.Paraescolar.objects.get(nombre=eleccion, turno=student.turno)
             print('aaaaaaaa')
             print(paraescolar.alumnos_inscritos)
-            if paraescolar and paraescolar.alumnos_inscritos < paraescolar.cupo_total:
-                student.paraescolar = eleccion
-                student.tiene_paraescolar = True
+            if paraescolar:
+                if paraescolar.alumnos_inscritos < paraescolar.cupo_total:
+                    student.paraescolar = eleccion
+                    student.tiene_paraescolar = True
 
-                paraescolar.alumnos_inscritos = paraescolar.alumnos_inscritos + 1
+                    paraescolar.alumnos_inscritos = paraescolar.alumnos_inscritos + 1
 
-                student.save()
-                paraescolar.save()
+                    student.save()
+                    paraescolar.save()
 
-                return JsonResponse({'message' : 'OK'})
+                    return JsonResponse({'message' : 'La selección fue exitosa!'})
+                else: 
+                    return JsonResponse({'message' : 'La paraescolar seleccionada ya está llena'}, status=404)
+            else:
+                return JsonResponse({'message' : 'La paraescolar no existe!'}, status=404)
 
-            return JsonResponse({'message' : 'Not found'}, status=404)
-
-        return JsonResponse({'message' : 'Not Found'}, status=404)
+        return JsonResponse({'message' : 'No se encontró un alumno con los datos proporcionados'}, status=404)
     except Exception as e:
         print(e)
-        return JsonResponse({'message' : 'Not found'}, status=404)
+        return JsonResponse({'message' : 'Ocurrió un error...'}, status=404)
 
 @api_view(['PATCH'])
 def removeView(request):
@@ -245,15 +280,17 @@ def xlsxGroupView(request):
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def makeParaescolarView(request):
-    data = request.data
-    paraescolar = data['nombre']
-    cupo = data['cupo_total']
-    turno = data['turno']
-    
-    newPara = models.Paraescolar(nombre=paraescolar, cupo_total=cupo, alumnos_inscritos=0, turno=turno)
-    newPara.save()
-
-    return JsonResponse({'message' : 'OK'})
+    try:
+        data = request.data
+        paraescolar = data['nombre']
+        cupo = data['cupo_total']
+        turno = data['turno']
+        
+        newPara = models.Paraescolar(nombre=paraescolar, cupo_total=cupo, alumnos_inscritos=0, turno=turno)
+        newPara.save()
+        return JsonResponse({'message' : 'La paraescolar se creó con éxito!'})
+    except:
+        return JsonResponse({'message' : 'Ocurrió un error...'})
 
 
 @api_view(['POST'])
@@ -282,45 +319,54 @@ def getAllParaescolarView(request):
 @api_view(['PATCH'])
 @permission_classes([IsAuthenticated])
 def changeParaescolarView(request):
-    data = request.data
-    paraescolar = data['nombre']
-    nuevo_nombre = data['nuevo_nombre']
-    turno = data['turno']
-    
-    models.Paraescolar.objects.filter(nombre=paraescolar, turno=turno).update(nombre=nuevo_nombre)
-
-    students = models.Student.objects.filter(paraescolar=paraescolar, turno=turno)
-    students.update(paraescolar=nuevo_nombre)
-    
+    try:
+        data = request.data
+        paraescolar = data['nombre']
+        nuevo_nombre = data['nuevo_nombre']
+        turno = data['turno']
         
-    return JsonResponse({'message' : 'OK'})
+        models.Paraescolar.objects.filter(nombre=paraescolar, turno=turno).update(nombre=nuevo_nombre)
+
+        students = models.Student.objects.filter(paraescolar=paraescolar, turno=turno)
+        students.update(paraescolar=nuevo_nombre)
+        
+            
+        return JsonResponse({'message' : f'La paraescolar {paraescolar} fue cambiada a {nuevo_nombre} exitosamente!'})
+    except:
+        return JsonResponse({'message' : 'Ocurrió un error...'})
 
 
 @api_view(['DELETE'])
 @permission_classes([IsAuthenticated])
 def deleteParaescolarView(request):
-    data = request.data
-    paraescolar = data['nombre']
-    turno = data['turno']
-    models.Paraescolar.objects.filter(nombre=paraescolar, turno=turno).delete()
+    try:
+        data = request.data
+        paraescolar = data['nombre']
+        turno = data['turno']
+        models.Paraescolar.objects.filter(nombre=paraescolar, turno=turno).delete()
 
-    students = models.Student.objects.filter(paraescolar=paraescolar, turno=turno)
-    students.update(paraescolar=None, tiene_paraescolar=False)
-
-    
-    return JsonResponse({'message' : 'OK'})
+        students = models.Student.objects.filter(paraescolar=paraescolar, turno=turno)
+        students.update(paraescolar=None, tiene_paraescolar=False)
+        
+        return JsonResponse({'message' : 'La paraescolar fue eliminada exitosamente!'})
+    except:
+        return JsonResponse({'message' : 'Ocurrió un error...'})
+        
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def getGroupList(request):
-    data = request.data
-    grupo = data['grupo']
-    students = models.Student.objects.filter(grupo=grupo)
-    obj = StudentSerializer(students, many=True).data
+    try:
+        data = request.data
+        grupo = data['grupo']
+        students = models.Student.objects.filter(grupo=grupo)
+        obj = StudentSerializer(students, many=True).data
 
-    res = sorted(obj, key = lambda x : x['nombre_completo'])
+        res = sorted(obj, key = lambda x : x['nombre_completo'])
 
-    return Response(res)
+        return Response(res)
+    except:
+        return JsonResponse({'message' : 'Ocurrió un error...'})
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
