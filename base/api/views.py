@@ -109,7 +109,7 @@ def validateView(request):
 
         #print(f'nombre: {nombre}, matrícula: {matricula}')
 
-        student = models.Student.objects.filter(nombre_completo=nombre, matricula=matricula)
+        student = models.Student.objects.get(nombre_completo=nombre, matricula=matricula)
         if student:
             return JsonResponse({'message' : 'La selección es válida',
                                 'turno' : student.turno
