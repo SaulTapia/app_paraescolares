@@ -113,9 +113,8 @@ def validateView(request):
 
         student = models.Student.objects.get(nombre_completo=nombre, matricula=matricula)
         if student:
-            return JsonResponse({'message' : 'La selección es válida',
-                                'turno' : student.turno
-                    })
+            obj = StudentSerializer(student)
+            return Response(obj.data)
 
         return JsonResponse({'message' : 'No se encontró un alumno con los datos proporcionados.',
                                 'turno' : student.turno
