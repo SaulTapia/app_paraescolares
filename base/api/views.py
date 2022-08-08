@@ -117,6 +117,9 @@ def validateView(request):
             student = None
 
         if student:
+            if student.tiene_paraescolar:
+                return JsonResponse({'error' : f'El alumno ya está inscrito en la paraescolar {student.paraescolar}'})
+                
             obj = StudentSerializer(student)
             return Response(obj.data)
 
