@@ -189,7 +189,7 @@ def selectView(request):
         return JsonResponse({'error' : 'No se encontró el alumno con los datos proporcionados'})
     except Exception as e:
         print(e)
-        return JsonResponse({'error' : str(e)})
+        return JsonResponse({'error' : e.message})
 
 @api_view(['PATCH'])
 def removeView(request):
