@@ -17,6 +17,11 @@ from django.http import FileResponse, JsonResponse
 from rest_framework import viewsets, renderers
 from rest_framework.decorators import action
 
+from django.contrib.auth.models import User
+from django.core.exceptions import ValidationError
+from django.core.validators import validate_email
+
+
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
     def get_token(cls, user):
@@ -412,3 +417,29 @@ def getParaescolarList(request):
     res = sorted(obj, key = lambda x : x['nombre_completo'])
 
     return Response(res)
+
+
+@api_view(['POST'])
+def teacherRegister(request):
+    data = request.data
+    email = data['email']
+    username = data['username']
+    password = data['password']
+
+    
+    try:
+        validate_email(email)
+    except ValidationError:
+        return JsonResponse({'error' : 'El correo proporcionado tiene un formato incorrecto.'})
+    else:
+        email_parts = email.split('@')
+
+        if email_parts[1] != 'cobachih.edu.mx':
+            return JsonResponse({'error' : 'El correo proporcionado debe ser insitucional (@cobachih.edu.mx)'})
+
+        if email_parts[0].isdigit():
+            return JsonResponse({'error' : 'El correo proporcionado debe ser de un docente'})
+        
+        User.objects.create_user(username, email, password)
+
+        return JsonResponse({'message' : 'Creación exitosa, pero aún no se implementa la verificación por correo'})
