@@ -2,5 +2,12 @@ from django.contrib import admin
 from .models import Student, Paraescolar
 # Register your models here.
 
-admin.site.register(Student)
-admin.site.register(Paraescolar)
+@admin.register(Student)
+class StudentAdmin(admin.ModelAdmin):
+    list_display = ('nombre_completo', 'grupo', 'matricula', 'paraescolar')
+
+
+@admin.register(Paraescolar)
+class ParaescolarAdmin(admin.ModelAdmin):
+    list_display = ('nombre', 'turno', 'alumnos_inscritos', 'cupo_total')
+
