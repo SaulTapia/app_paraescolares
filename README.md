@@ -8,6 +8,7 @@ API en django para app manejo de paraescolares
 | /api/token                         | POST    |username, password        |Refresh & access tokens       |No
 | /api/token/refresh                 | POST    |Refresh token             |Refresh & access tokens       |No
 | /api/students                      | GET     |Access token              |Array de todos los estudiantes|Sí
+| /api/students/<matricula>/         | GET     |Access token              |Objeto con datos del alumno   |Sí
 | /api/students/upload/<archivo.csv> | PATCH   |Access token & archivo.csv|200 OK / 401 Unauthorized     |Sí
 | /api/wake/                         | GET     |                          |200 OK                        |No
 | /api/select/                       | POST    |nombres, apellido_paterno, apellido_materno, matricula, eleccion|200 OK / 404 not found|No|
