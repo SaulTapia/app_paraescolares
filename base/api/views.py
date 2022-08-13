@@ -79,8 +79,22 @@ class FileUploadView(api_views.APIView):
             obj_list = [models.Student(**student_dict) for student_dict in student_list]
             objs = models.Student.objects.bulk_create(obj_list)
             return JsonResponse({'message' : 'Alumnos agregados con éxito!'})
-        except:
-            return JsonResponse({'error' : 'Hubo un problema agregando los alumnos.'})
+        except Exception as e:
+            return JsonResponse({'error' : str(e)})
+
+class GetStudent(api_views.APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, matricula, format=None):
+        try:
+            student = models.Student.objects.filter(matricula=matricula)
+            if student:
+                stu = StudentSerializer(student.first())
+                return Response(stu.data)
+            
+            return JsonResponse({'error' : 'No se encontró un alumno con la matrícula proporcionada'})
+        except Exception as e:
+            return JsonResponse({'error' : str(e)})
 
 @api_view(['GET'])
 def wakeView(request):
