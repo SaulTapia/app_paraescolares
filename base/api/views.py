@@ -83,7 +83,6 @@ class FileUploadView(api_views.APIView):
             return JsonResponse({'error' : str(e)})
 
 class GetStudent(api_views.APIView):
-    permission_classes = [IsAuthenticated]
 
     def get(self, request, matricula, format=None):
         try:
