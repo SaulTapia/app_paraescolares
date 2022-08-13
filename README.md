@@ -13,14 +13,15 @@ API en django para app manejo de paraescolares
 | /api/select/                       | POST    |nombres, apellido_paterno, apellido_materno, matricula, eleccion|200 OK / 404 not found|No|
 | /api/select/validate/              | POST    |nombres, apellido_paterno, apellido_materno, matricula|200 OK / 404 not found|No|
 | /api/select/remove/ <br />(DEBUG, QUITAR ANTES DE PRODUCCIÓN)  | PATCH    |nombres, apellido_paterno, apellido_materno, matricula|200 OK / 404 not found|No|
-| /api/xlsx/group/                   | POST     |grupo                     |Xlsx con alumnos del grupo    |Sí|
-| /api/xlsx/paraescolar/             | POST     |nombre_paraescolar, turno             |Xlsx con alumnos de la paraescolar|Sí|
-| /api/list/group/                   | POST     |grupo                     |Array con alumnos del grupo   |Sí|
-| /api/list/paraescolar/             | POST     |nombre_paraescolar, turno             |Array con alumnos de la paraescolar|Sí|
-| /api/paraescolares/getall/         | GET      |                          |Array con datos de todas las paraescolares|No|
-| /api/paraescolares/make/           | POST     |nombre, turno, cupo_total |200 OK                        |Sí|
-| /api/paraescolares/delete/         | DELETE   |nombre, turno             |200 OK                        |Sí|
-| /api/teacher/register/             | POST     |userame, password, email  |200 OK                        |No|
+| /api/select/change/                | PATCH   |matricula, eleccion, turno|200 OK                        |Sí|
+| /api/xlsx/group/                   | POST    |grupo                     |Xlsx con alumnos del grupo    |Sí|
+| /api/xlsx/paraescolar/             | POST    |nombre_paraescolar, turno             |Xlsx con alumnos de la paraescolar|Sí|
+| /api/list/group/                   | POST    |grupo                     |Array con alumnos del grupo   |Sí|
+| /api/list/paraescolar/             | POST    |nombre_paraescolar, turno             |Array con alumnos de la paraescolar|Sí|
+| /api/paraescolares/getall/         | GET     |                          |Array con datos de todas las paraescolares|No|
+| /api/paraescolares/make/           | POST    |nombre, turno, cupo_total |200 OK                        |Sí|
+| /api/paraescolares/delete/         | DELETE  |nombre, turno             |200 OK                        |Sí|
+| /api/teacher/register/             | POST    |userame, password, email  |200 OK                        |No|
 
 # Formato de archivos .csv
 ```apellido_paterno,apellido_materno,nombres,grupo,matricula```
