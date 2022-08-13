@@ -17,6 +17,7 @@ urlpatterns = [
 
     path('wake/', views.wakeView),
     path('select/', views.selectView),
+    path('select/change/', views.changeView),
     path('select/validate/', views.validateView),
     path('select/remove/', views.removeView),
     

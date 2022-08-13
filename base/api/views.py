@@ -199,6 +199,71 @@ def selectView(request):
         print(e)
         return JsonResponse({'error' : e.message})
 
+
+@permission_classes([IsAuthenticated])
+@api_view(['PATCH'])
+def changeView(request):
+    try: 
+        data = request.data
+        #print(data)
+        matricula = data['matricula']
+        eleccion = data['eleccion']
+        turno = data['turno']
+
+        if not matricula.isdigit():
+            return JsonResponse({'error' : 'La matrícula solo puede contener números'})
+
+        try:
+            student = models.Student.objects.get(matricula=matricula, turno=turno)
+        except:
+            student = None  
+
+        para = models.Paraescolar.objects.filter(nombre=eleccion, turno=turno)
+        if not para:
+            return JsonResponse({'error' : 'La paraescolar seleccionada no existe!'})
+            
+        if student:
+            if student.tiene_paraescolar:
+                if student.paraescolar == eleccion:
+                    return JsonResponse({'error' : f'El alumno seleccionado ya está en la paraescolar de {eleccion}!'})
+                previa = models.Paraescolar.objects.get(nombre=student.paraescolar, turno=turno)
+                proxima = models.Paraescolar.objects.get(nombre=eleccion, turno=turno)
+
+                if proxima.alumnos_inscritos < proxima.cupo_total:
+                    previa.alumnos_inscritos = previa.alumnos_inscritos - 1
+                    proxima.alumnos_inscritos = proxima.alumnos_inscritos + 1
+                    previa.save()
+                    proxima.save()
+
+                else:
+                    return JsonResponse({'error' : 'La paraescolar seleccionada ya no tiene cupo'})
+
+            else:
+                proxima = models.Paraescolar.objects.get(nombre=eleccion)
+                
+                if proxima.alumnos_inscritos < proxima.cupo_total:
+                    proxima.alumnos_inscritos = proxima.alumnos_inscritos + 1
+                    proxima.save()
+                else:
+                    return JsonResponse({'error' : 'La paraescolar seleccionada ya no tiene cupo'})
+                
+            
+            prev_name = student.paraescolar
+            student.paraescolar = eleccion
+            student.tiene_paraescolar = True
+            student.save()
+
+            if student.tiene_paraescolar:            
+                return JsonResponse({'message' : f'La paraescolar del alumno/a con matrícula {matricula} se cambió exitosamente de {prev_name} a {eleccion}'})
+            else:
+                return JsonResponse({'message' : f'La paraescolar del alumno/a con matrícula {matricula} se cambió exitosamente de ninguna a {eleccion}'})
+
+
+        return JsonResponse({'error' : 'No se encontró el alumno con los datos proporcionados'})
+    except Exception as e:
+        print(e)
+        return JsonResponse({'error' : e.message})
+
 @api_view(['PATCH'])
 def removeView(request):
     try:
