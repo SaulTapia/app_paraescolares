@@ -4,11 +4,11 @@ from django.db import models
 class Student(models.Model):    
     nombre_completo = models.CharField(max_length=200, null=False)
     grupo = models.CharField(max_length=50)
-    paraescolar = models.CharField(max_length=200, null=True)
+    paraescolar = models.CharField(max_length=200, blank=True, null=True)
     matricula = models.CharField(max_length=30)
     turno = models.CharField(max_length=50)
     tiene_paraescolar = models.BooleanField(default=False)
-    
+    plantel = models.IntegerField(default=8)
 
 
     def __str__(self):
@@ -19,10 +19,11 @@ class Paraescolar(models.Model):
     turno = models.CharField(max_length=30, null=False)
     cupo_total = models.IntegerField(null=False)
     alumnos_inscritos = models.IntegerField(null=False)
+    plantel = models.IntegerField(default=8)
 
 
     def __str__(self):
         return self.nombre
 
     class Meta:
-        unique_together = ('nombre', 'turno',)
+        unique_together = ('nombre', 'turno', 'plantel')

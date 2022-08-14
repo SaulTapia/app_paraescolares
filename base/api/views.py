@@ -4,11 +4,12 @@ from rest_framework.parsers import FileUploadParser
 from rest_framework import views as api_views
 
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+#from rest_framework_simplejwt.serializers import User as TokenUser
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework.permissions import IsAuthenticated
 from .. import models
 
-from .serializers import StudentSerializer, ParaescolarSerializer
+from .serializers import StudentSerializer, ParaescolarSerializer #, CustomTokenObtainPairSerializer
 from .utility.csv_reader import file_to_students
 from .utility.csv_reader import remove_accents
 from .utility.xlsx import xlsx_grupos, xlsx_paraescolares
@@ -36,6 +37,9 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
 class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
 
+#class EmailTokenObtainPairView(TokenObtainPairView):
+    #serializer_class = CustomTokenObtainPairSerializer
+
 
 @api_view(['GET'])
 def getRoutes(request):
@@ -45,6 +49,20 @@ def getRoutes(request):
     ]
 
     return Response(routes)
+
+
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def deleteStudent(request):
+    data = request.data
+    matricula = data['matricula']
+    student = models.Student.objects.get(matricula=matricula)
+
+    if student:
+        student.delete()
+        return JsonResponse({'message' : f'El alumno con matrícula {matricula} fue eliminado'})
+
+    return JsonResponse({'error' : f'No se encontró el alumno con la matrícula {matricula}'})
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
@@ -76,7 +94,9 @@ class FileUploadView(api_views.APIView):
         try:
             file_obj = request.data['file']
             student_list = file_to_students(file_obj)
+
             obj_list = [models.Student(**student_dict) for student_dict in student_list]
+            
             objs = models.Student.objects.bulk_create(obj_list)
             return JsonResponse({'message' : 'Alumnos agregados con éxito!'})
         except Exception as e:
@@ -87,6 +107,7 @@ class GetStudent(api_views.APIView):
 
     def get(self, request, matricula, format=None):
         try:
+            #print(int(matricula[2:4].lstrip('0')))
             student = models.Student.objects.filter(matricula=matricula)
             if student:
                 stu = StudentSerializer(student.first())
@@ -95,6 +116,8 @@ class GetStudent(api_views.APIView):
             return JsonResponse({'error' : 'No se encontró un alumno con la matrícula proporcionada'})
         except Exception as e:
             return JsonResponse({'error' : str(e)})
+
+
 
 @api_view(['GET'])
 def wakeView(request):
@@ -111,6 +134,11 @@ def validateView(request):
         if not matricula.isdigit():
             return JsonResponse({'error' : 'La matrícula solo puede contener números'})
 
+        if len(matricula) != 8:
+            return JsonResponse({'error' : 'La matrícula no tiene el tamaño correcto'})
+
+    
+
         if 'apellido_paterno' in data and data['apellido_paterno']:
             apellido_paterno = data['apellido_paterno'] + ' '
         else:
@@ -118,7 +146,7 @@ def validateView(request):
                                 'turno' : student.turno
                                 })
 
-        if 'apellido_materno' in data:
+        if 'apellido_materno' in data and data['apellido_materno']:
             apellido_materno = data['apellido_materno'] + ' '
         else :
             apellido_materno = ''
@@ -160,6 +188,11 @@ def selectView(request):
         if not matricula.isdigit():
             return JsonResponse({'error' : 'La matrícula solo puede contener números'})
 
+        if len(matricula) != 8:
+            return JsonResponse({'error' : 'La matrícula no tiene el tamaño correcto'})
+
+        plantel = int(matricula[2:4].lstrip('0'))
+
         if 'apellido_paterno' in data and data['apellido_paterno']:
             apellido_paterno = data['apellido_paterno'] + ' '
         else:
@@ -167,7 +200,7 @@ def selectView(request):
                                 'turno' : student.turno
                                 })
 
-        if 'apellido_materno' in data:
+        if 'apellido_materno' in data and data['apellido_materno']:
             apellido_materno = data['apellido_materno'] + ' '
         else :
             apellido_materno = ''
@@ -189,7 +222,7 @@ def selectView(request):
                 return JsonResponse({'error' : f'El alumno ya está inscrito en la paraescolar {student.paraescolar}'})
                 
             print(student.turno)
-            paraescolar = models.Paraescolar.objects.get(nombre=eleccion, turno=student.turno)
+            paraescolar = models.Paraescolar.objects.get(nombre=eleccion, turno=student.turno, plantel=plantel)
             print('aaaaaaaa')
             print(paraescolar.alumnos_inscritos)
             if paraescolar:
@@ -206,7 +239,7 @@ def selectView(request):
                 else: 
                     return JsonResponse({'error' : 'Las paraescolares seleccionadas ya no cuentan con espacio.'})
             else:
-                return JsonResponse({'error' : 'La paraescolar no existe!'})
+                return JsonResponse({'error' : 'No se encontró la paraescolar indicada'})
 
         return JsonResponse({'error' : 'No se encontró el alumno con los datos proporcionados'})
     except Exception as e:
@@ -227,23 +260,28 @@ def changeView(request):
         if not matricula.isdigit():
             return JsonResponse({'error' : 'La matrícula solo puede contener números'})
 
+        if len(matricula) != 8:
+            return JsonResponse({'error' : 'La matrícula no tiene el tamaño correcto'})
+
+        plantel = int(matricula[2:4].lstrip('0'))
+
         try:
             student = models.Student.objects.get(matricula=matricula, turno=turno)
         except:
             student = None  
 
-        para = models.Paraescolar.objects.filter(nombre=eleccion, turno=turno)
+        para = models.Paraescolar.objects.filter(nombre=eleccion, turno=turno, plantel=plantel)
         if not para:
-            return JsonResponse({'error' : 'La paraescolar seleccionada no existe!'})
+            return JsonResponse({'error' : 'No se encontró la paraescolar indicada'})
             
         if student:
             if student.tiene_paraescolar:
                 if student.paraescolar == eleccion:
                     return JsonResponse({'error' : f'El alumno seleccionado ya está en la paraescolar de {eleccion}!'})
-                previa = models.Paraescolar.objects.get(nombre=student.paraescolar, turno=turno)
-                proxima = models.Paraescolar.objects.get(nombre=eleccion, turno=turno)
+                previa = models.Paraescolar.objects.filter(nombre=student.paraescolar, turno=turno, plantel=plantel).first()
+                proxima = models.Paraescolar.objects.filter(nombre=eleccion, turno=turno, plantel=plantel).first()
 
-                if proxima.alumnos_inscritos < proxima.cupo_total:
+                if previa and proxima and proxima.alumnos_inscritos < proxima.cupo_total:
                     previa.alumnos_inscritos = previa.alumnos_inscritos - 1
                     proxima.alumnos_inscritos = proxima.alumnos_inscritos + 1
                     previa.save()
@@ -253,11 +291,12 @@ def changeView(request):
                     return JsonResponse({'error' : 'La paraescolar seleccionada ya no tiene cupo'})
 
             else:
-                proxima = models.Paraescolar.objects.get(nombre=eleccion)
+                proxima = models.Paraescolar.objects.get(nombre=eleccion, turno=turno, plantel=plantel)
                 
-                if proxima.alumnos_inscritos < proxima.cupo_total:
+                if proxima and proxima.alumnos_inscritos < proxima.cupo_total:
                     proxima.alumnos_inscritos = proxima.alumnos_inscritos + 1
                     proxima.save()
+
                 else:
                     return JsonResponse({'error' : 'La paraescolar seleccionada ya no tiene cupo'})
                 
@@ -288,6 +327,11 @@ def removeView(request):
         if not matricula.isdigit():
             return JsonResponse({'error' : 'La matrícula solo puede contener dígitos'})
 
+        if len(matricula) != 8:
+            return JsonResponse({'error' : 'La matrícula no tiene el tamaño correcto'})
+
+        plantel = int(matricula[2:4].lstrip('0'))
+
         if 'apellido_paterno' in data:
             apellido_paterno = data['apellido_paterno'] + ' '
         else:
@@ -299,7 +343,6 @@ def removeView(request):
             apellido_materno = ''
 
         nombres = data['nombres']
-
         nombre = apellido_paterno + apellido_materno + nombres
         nombre = remove_accents(nombre).upper()
         
@@ -308,7 +351,7 @@ def removeView(request):
 
         if student:
             if student.paraescolar:
-                paraescolar = models.Paraescolar.objects.get(nombre=student.paraescolar, turno=student.turno)
+                paraescolar = models.Paraescolar.objects.get(nombre=student.paraescolar, turno=student.turno, plantel=plantel)
                 paraescolar.alumnos_inscritos = paraescolar.alumnos_inscritos - 1
                 paraescolar.save()
                 
@@ -396,8 +439,11 @@ def makeParaescolarView(request):
         paraescolar = data['nombre']
         cupo = data['cupo_total']
         turno = data['turno']
+        plantel = 8
+        if 'plantel' in data:
+            plantel = int(data['plantel'])
         
-        newPara = models.Paraescolar(nombre=paraescolar, cupo_total=cupo, alumnos_inscritos=0, turno=turno)
+        newPara = models.Paraescolar(nombre=paraescolar, cupo_total=cupo, alumnos_inscritos=0, turno=turno, plantel=plantel)
         newPara.save()
         return JsonResponse({'message' : 'La paraescolar se creó con éxito!'})
     except Exception as e:
@@ -410,9 +456,13 @@ def getParaescolarView(request):
     data = request.data
     paraescolar = data['nombre']
     turno = data['turno']
+
+    plantel = 8
+    if 'plantel' in data:
+        plantel = int(data['plantel'])
     
     print(f'Get {paraescolar}-{turno}')
-    para = models.Paraescolar.objects.get(nombre=paraescolar, turno=turno)
+    para = models.Paraescolar.objects.get(nombre=paraescolar, turno=turno, plantel=plantel)
     obj = ParaescolarSerializer(para)
 
     return Response(obj.data)
@@ -435,8 +485,12 @@ def changeParaescolarView(request):
         paraescolar = data['nombre']
         nuevo_nombre = data['nuevo_nombre']
         turno = data['turno']
+
+        plantel = 8
+        if 'plantel' in data:
+            plantel = int(data['plantel'])
         
-        models.Paraescolar.objects.filter(nombre=paraescolar, turno=turno).update(nombre=nuevo_nombre)
+        models.Paraescolar.objects.filter(nombre=paraescolar, turno=turno, plantel=plantel).update(nombre=nuevo_nombre)
 
         students = models.Student.objects.filter(paraescolar=paraescolar, turno=turno)
         students.update(paraescolar=nuevo_nombre)
@@ -454,7 +508,11 @@ def deleteParaescolarView(request):
         data = request.data
         paraescolar = data['nombre']
         turno = data['turno']
-        models.Paraescolar.objects.filter(nombre=paraescolar, turno=turno).delete()
+        plantel = 8
+        if 'plantel' in data:
+            plantel = int(data['plantel'])
+
+        models.Paraescolar.objects.filter(nombre=paraescolar, turno=turno, plantel=plantel).delete()
 
 
         students = models.Student.objects.filter(paraescolar=paraescolar, turno=turno)
@@ -522,3 +580,5 @@ def teacherRegister(request):
         User.objects.create_user(username, email, password)
 
         return JsonResponse({'message' : 'Creación exitosa, pero aún no se implementa la verificación por correo'})
+
+
