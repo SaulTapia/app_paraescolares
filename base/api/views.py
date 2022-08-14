@@ -103,7 +103,6 @@ class FileUploadView(api_views.APIView):
             return JsonResponse({'error' : str(e)})
 
 class GetStudent(api_views.APIView):
-    permission_classes = [IsAuthenticated]
 
     def get(self, request, matricula, format=None):
         try:
@@ -278,10 +277,10 @@ def changeView(request):
             if student.tiene_paraescolar:
                 if student.paraescolar == eleccion:
                     return JsonResponse({'error' : f'El alumno seleccionado ya está en la paraescolar de {eleccion}!'})
-                previa = models.Paraescolar.objects.filter(nombre=student.paraescolar, turno=turno, plantel=plantel).first()
-                proxima = models.Paraescolar.objects.filter(nombre=eleccion, turno=turno, plantel=plantel).first()
+                previa = models.Paraescolar.objects.get(nombre=student.paraescolar, turno=turno)
+                proxima = models.Paraescolar.objects.get(nombre=eleccion, turno=turno)
 
-                if previa and proxima and proxima.alumnos_inscritos < proxima.cupo_total:
+                if proxima.alumnos_inscritos < proxima.cupo_total:
                     previa.alumnos_inscritos = previa.alumnos_inscritos - 1
                     proxima.alumnos_inscritos = proxima.alumnos_inscritos + 1
                     previa.save()
@@ -580,5 +579,3 @@ def teacherRegister(request):
         User.objects.create_user(username, email, password)
 
         return JsonResponse({'message' : 'Creación exitosa, pero aún no se implementa la verificación por correo'})
-
-
