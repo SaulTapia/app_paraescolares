@@ -5,7 +5,7 @@ class Student(models.Model):
     nombre_completo = models.CharField(max_length=200, null=False)
     grupo = models.CharField(max_length=50)
     paraescolar = models.CharField(max_length=200, blank=True, null=True)
-    matricula = models.CharField(max_length=30)
+    matricula = models.CharField(max_length=30, unique=True)
     turno = models.CharField(max_length=50)
     tiene_paraescolar = models.BooleanField(default=False)
     plantel = models.IntegerField(default=8)
