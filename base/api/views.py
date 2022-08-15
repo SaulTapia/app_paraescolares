@@ -511,15 +511,17 @@ def deleteParaescolarView(request):
         if 'plantel' in data:
             plantel = int(data['plantel'])
 
-        models.Paraescolar.objects.filter(nombre=paraescolar, turno=turno, plantel=plantel).delete()
+        para = models.Paraescolar.objects.filter(nombre=paraescolar, turno=turno, plantel=plantel)
 
-
-        students = models.Student.objects.filter(paraescolar=paraescolar, turno=turno)
-        if students.exists():
-            students.update(paraescolar=None, tiene_paraescolar=False)            
+        if para:
+            para.delete()
+            students = models.Student.objects.filter(paraescolar=paraescolar, turno=turno)
+            if students.exists():
+                students.update(paraescolar=None, tiene_paraescolar=False)            
+                
             return JsonResponse({'message' : 'La paraescolar fue eliminada exitosamente!'})
-
         return JsonResponse({'error' : 'No se encontró la paraescolar con los datos proporcionados.'})
+        
 
     except Exception as e:
         return JsonResponse({'error' : str(e)}, status=500)
