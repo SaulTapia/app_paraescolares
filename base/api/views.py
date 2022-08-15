@@ -190,7 +190,8 @@ def selectView(request):
         if len(matricula) != 8:
             return JsonResponse({'error' : 'La matrícula no tiene el tamaño correcto'})
 
-        plantel = int(matricula[2:4].lstrip('0'))
+        #plantel = int(matricula[2:4].lstrip('0'))
+        plantel = 8
 
         if 'apellido_paterno' in data and data['apellido_paterno']:
             apellido_paterno = data['apellido_paterno'] + ' '
@@ -262,7 +263,8 @@ def changeView(request):
         if len(matricula) != 8:
             return JsonResponse({'error' : 'La matrícula no tiene el tamaño correcto'})
 
-        plantel = int(matricula[2:4].lstrip('0'))
+        #plantel = int(matricula[2:4].lstrip('0'))
+        plantel = 8
 
         try:
             student = models.Student.objects.get(matricula=matricula, turno=turno)
@@ -329,7 +331,8 @@ def removeView(request):
         if len(matricula) != 8:
             return JsonResponse({'error' : 'La matrícula no tiene el tamaño correcto'})
 
-        plantel = int(matricula[2:4].lstrip('0'))
+        #plantel = int(matricula[2:4].lstrip('0'))
+        plantel = 8
 
         if 'apellido_paterno' in data:
             apellido_paterno = data['apellido_paterno'] + ' '
