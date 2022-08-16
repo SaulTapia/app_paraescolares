@@ -34,5 +34,6 @@ urlpatterns = [
     path('paraescolares/change/', views.changeParaescolarView),
     path('paraescolares/delete/', views.deleteParaescolarView),
 
+    path('groups/', views.getGroups),
     #path('teacher/register/', views.teacherRegister),
 ]

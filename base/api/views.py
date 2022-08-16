@@ -584,3 +584,9 @@ def teacherRegister(request):
         User.objects.create_user(username, email, password)
 
         return JsonResponse({'message' : 'Creación exitosa, pero aún no se implementa la verificación por correo'})
+
+@api_view(['GET'])
+def getGroups(request):
+    groups = list(models.Student.objects.order_by().values_list('grupo').distinct())
+    groups = sorted([x[0] for x in groups])
+    return Response(groups)
