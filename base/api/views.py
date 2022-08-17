@@ -320,6 +320,12 @@ def changeView(request):
         print(e)
         return JsonResponse({'error' : e.message})
 
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def checkTokenView(request):
+    return JsonResponse({'message' : 'OK'})
+
+
 @api_view(['PATCH'])
 def removeView(request):
     try:
@@ -411,7 +417,7 @@ def csvParaescolarView(request):
     students = models.Student.objects.filter(paraescolar=paraescolar, turno=turno, plantel=plantel)
 
     response = HttpResponse(content_type='text/csv')
-    response['Content-Disposition'] = 'attachment; filename="export.csv"'
+    response['Content-Disposition'] = f'attachment; filename="{paraescolar}-{turno}-{plantel}.csv"'
 
 
     students = list(students.values())
@@ -434,7 +440,7 @@ def csvGroupView(request):
     students = students.values()
 
     response = HttpResponse(content_type='text/csv')
-    response['Content-Disposition'] = 'attachment; filename="export.csv"'
+    response['Content-Disposition'] = f'attachment; filename="{grupo}-{plantel}.csv"'
 
     csv_grupos(students, response)
     

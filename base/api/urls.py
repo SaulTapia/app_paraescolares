@@ -5,18 +5,21 @@ from rest_framework_simplejwt.views import (
     TokenRefreshView,
 )
 
+
 from .views import MyTokenObtainPairView
 
 urlpatterns = [
     path('', views.getRoutes),
     path('token/', MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('token/check/', views.checkTokenView),
     path('students/', views.getStudents),
     re_path(r'^students/upload/(?P<filename>[^/]+)$', views.FileUploadView.as_view()),
     path('students/<str:matricula>/', views.GetStudent.as_view()),
     path('students/change/switchturn/', views.changeStudentTurn),
 
     path('wake/', views.wakeView),
+
     path('select/', views.selectView),
     path('select/change/', views.changeView),
     path('select/validate/', views.validateView),
