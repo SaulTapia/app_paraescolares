@@ -22,8 +22,8 @@ urlpatterns = [
     path('select/validate/', views.validateView),
     path('select/remove/', views.removeView),
     
-    path('xlsx/group/', views.xlsxGroupView),
-    path('xlsx/paraescolar/', views.xlsxParaescolarView),
+    #path('xlsx/group/', views.xlsxGroupView),
+    #path('xlsx/paraescolar/', views.xlsxParaescolarView),
 
     path('list/group/', views.getGroupList),
     path('list/paraescolar/', views.getParaescolarList),
@@ -35,5 +35,7 @@ urlpatterns = [
     path('paraescolares/delete/', views.deleteParaescolarView),
 
     path('groups/', views.getGroups),
+    path('csv/paraescolar/', views.csvParaescolarView),
+    path('csv/group/', views.csvGroupView),
     #path('teacher/register/', views.teacherRegister),
 ]

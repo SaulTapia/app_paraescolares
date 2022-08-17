@@ -1,3 +1,4 @@
+from http.client import HTTPResponse
 from rest_framework.response import Response
 from rest_framework.decorators import api_view,  permission_classes
 from rest_framework.parsers import FileUploadParser
@@ -13,8 +14,9 @@ from .serializers import StudentSerializer, ParaescolarSerializer #, CustomToken
 from .utility.csv_reader import file_to_students
 from .utility.csv_reader import remove_accents
 from .utility.xlsx import xlsx_grupos, xlsx_paraescolares
+from .utility.csv import csv_paraescolares, csv_grupos
 
-from django.http import FileResponse, JsonResponse
+from django.http import FileResponse, JsonResponse, HttpResponse
 from rest_framework import viewsets, renderers
 from rest_framework.decorators import action
 
@@ -388,11 +390,56 @@ def xlsxParaescolarView(request):
     response = FileResponse(file_handle, content_type='whatever')
     print('get real')
     response['Content-Disposition'] = 'attachment; filename="%s"' % filename
+    response['Content-Type'] = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
     #response['Content-Length'] = len(response.content)
     print('got real')
 
     return response
 
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def csvParaescolarView(request):
+    data = request.data
+    print(data)
+    paraescolar = data['paraescolar']
+    turno = data['turno']
+    plantel = 8
+    if 'plantel' in data:
+        plantel = data['plantel']
+    #paraescolar = 'robotica'
+    #turno = 'matutino'
+    students = models.Student.objects.filter(paraescolar=paraescolar, turno=turno, plantel=plantel)
+
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="export.csv"'
+
+
+    students = list(students.values())
+    csv_paraescolares(students, response)
+
+    return response
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def csvGroupView(request):
+    data = request.data
+    print(data)
+    grupo = data['grupo']
+    plantel = 8
+    if 'plantel' in data:
+        plantel = data['plantel']
+    #grupo = '609'
+
+    students = models.Student.objects.filter(grupo=grupo, plantel=plantel)
+    students = students.values()
+
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="export.csv"'
+
+    csv_grupos(students, response)
+    
+
+    return response    
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
@@ -409,6 +456,7 @@ def changeStudentTurn(request):
     
     student.save()
     return Response()
+
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
