@@ -24,6 +24,8 @@ API en django para app manejo de paraescolares
 | /api/paraescolares/delete/         | DELETE  |nombre, turno             |200 OK                        |Sí|
 | /api/teacher/register/             | POST    |userame, password, email  |200 OK                        |No|
 | /api/groups/                       | GET     |                          |Array de grupos               |No|
+| /api/csv/group/                    | POST    |grupo                     |CSV con datos de los alumnos del grupo       |Sí|
+| /api/csv/paraescolar/              | POST    |paraescolar, turno        |CSV con datos de los alumnos de la paraescolar|Sí|
 
 # Formato de archivos .csv
 ```apellido_paterno,apellido_materno,nombres,grupo,matricula```
