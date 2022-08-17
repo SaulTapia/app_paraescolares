@@ -320,7 +320,7 @@ def changeView(request):
         print(e)
         return JsonResponse({'error' : e.message})
 
-@api_view(['GET'])
+@api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def checkTokenView(request):
     return JsonResponse({'message' : 'OK'})
