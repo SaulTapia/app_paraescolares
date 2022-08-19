@@ -21,6 +21,7 @@ def file_to_students(file):
 
     #print(df.head())
     df.columns = ['apellido_paterno', 'apellido_materno', 'nombres', 'grupo', 'matricula']
+    df.fillna("",inplace=True)
     df['turno'] = df['grupo'].apply(make_turn)
     df['matricula'] = df['matricula'].astype('str')
 

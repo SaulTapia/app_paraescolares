@@ -78,15 +78,6 @@ def getStudents(request):
 
     return Response(obj.data)
 
-@api_view(['POST'])
-@permission_classes([IsAuthenticated])
-def uploadStudents(request):
-    
-    students = models.Student.objects.all()
-    obj = StudentSerializer(students, many=True)
-
-    return Response(obj.data)
-
 
 class FileUploadView(api_views.APIView):
     parser_classes = [FileUploadParser]
