@@ -485,13 +485,23 @@ def makeParaescolarView(request):
         data = request.data
         paraescolar = data['nombre']
         cupo = data['cupo_total']
+        turno = None
+        #if 'turno' in data and data['turno']:
         turno = data['turno']
         plantel = 8
         if 'plantel' in data:
             plantel = int(data['plantel'])
         
-        newPara = models.Paraescolar(nombre=paraescolar, cupo_total=cupo, alumnos_inscritos=0, turno=turno, plantel=plantel)
-        newPara.save()
+        if turno == 'AMBOS':
+            matPara = models.Paraescolar(nombre=paraescolar, cupo_total=cupo, alumnos_inscritos=0, turno="MATUTINO", plantel=plantel)
+            vesPara = models.Paraescolar(nombre=paraescolar, cupo_total=cupo, alumnos_inscritos=0, turno="VESPERTINO", plantel=plantel)
+            matPara.save()
+            vesPara.save()
+
+        else:
+            newPara = models.Paraescolar(nombre=paraescolar, cupo_total=cupo, alumnos_inscritos=0, turno=turno, plantel=plantel)
+            newPara.save()
+            
         return JsonResponse({'message' : 'La paraescolar se creó con éxito!'})
     except Exception as e:
         return JsonResponse({'error' : str(e)})
@@ -530,20 +540,39 @@ def changeParaescolarView(request):
     try:
         data = request.data
         paraescolar = data['nombre']
-        nuevo_nombre = data['nuevo_nombre']
         turno = data['turno']
-
         plantel = 8
+
         if 'plantel' in data:
             plantel = int(data['plantel'])
-        
-        models.Paraescolar.objects.filter(nombre=paraescolar, turno=turno, plantel=plantel).update(nombre=nuevo_nombre)
 
-        students = models.Student.objects.filter(paraescolar=paraescolar, turno=turno)
-        students.update(paraescolar=nuevo_nombre)
+        para = models.Paraescolar.objects.filter(nombre=paraescolar, turno=turno, plantel=plantel)
+
+        if 'nuevo_cupo' in data and data['nuevo_cupo']:
+            nuevo_cupo = data['nuevo_cupo']
+            if nuevo_cupo < para.alumnos_inscritos:
+                return JsonResponse({'error' : f'No se puede reducir el cupo porque la paraescolar tiene {para.alumnos_inscritos} alumnos inscritos.'})
+            para.update(nombre=nuevo_cupo)
+
+        if 'nuevo_nombre' in data and data['nuevo_nombre']:
+            nuevo_nombre = data['nuevo_nombre']
+            para.update(nombre=nuevo_nombre)
+
+            students = models.Student.objects.filter(paraescolar=paraescolar, turno=turno)
+            students.update(paraescolar=nuevo_nombre)
+
+
+        #if 'nuevo_nombre' in data and data['nuevo_nombre']:
+            #nuevo_nombre = data['nuevo_nombre']
+            #para.update(nombre=nuevo_nombre)
+
+            
+        #nuevo_cupo = data['nuevo_cupo']
+        
+        return JsonResponse({'message' : f'La paraescolar se actualizó exitosamente!'})
+
         
             
-        return JsonResponse({'message' : f'La paraescolar {paraescolar} fue cambiada a {nuevo_nombre} exitosamente!'})
     except Exception as e:
         return JsonResponse({'error' : str(e)}, status=500)
 
