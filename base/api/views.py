@@ -97,10 +97,10 @@ class FileUploadView(api_views.APIView):
 
 class GetStudent(api_views.APIView):
 
-    def get(self, request, matricula, format=None):
+    def get(self, request, id, format=None):
         try:
-            #print(int(matricula[2:4].lstrip('0')))
-            student = models.Student.objects.filter(matricula=matricula)
+            #print(int(id[2:4].lstrip('0')))
+            student = models.Student.objects.filter(id=id)
             if student:
                 stu = StudentSerializer(student.first())
                 return Response(stu.data)

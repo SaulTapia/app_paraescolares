@@ -15,7 +15,7 @@ urlpatterns = [
     path('token/check/', views.checkTokenView),
     path('students/', views.getStudents),
     re_path(r'^students/upload/(?P<filename>[^/]+)$', views.FileUploadView.as_view()),
-    path('students/<str:matricula>/', views.GetStudent.as_view()),
+    path('students/<str:id>/', views.GetStudent.as_view()),
     path('students/change/switchturn/', views.changeStudentTurn),
 
     path('wake/', views.wakeView),
