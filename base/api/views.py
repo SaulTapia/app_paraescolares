@@ -122,11 +122,12 @@ def validateView(request):
         #print(data)
         matricula = str(data['matricula'])
 
-
-        if not matricula.isdigit():
+        if matricula == "":
+            pass
+        elif not matricula.isdigit():
             return JsonResponse({'error' : 'La matrícula solo puede contener números'})
 
-        if len(matricula) != 8:
+        elif len(matricula) != 8:
             return JsonResponse({'error' : 'La matrícula no tiene el tamaño correcto'})
 
     
@@ -177,10 +178,12 @@ def selectView(request):
         nombres = data['nombres']
         eleccion = data['eleccion']
 
-        if not matricula.isdigit():
-            return JsonResponse({'error' : 'La matrícula solo puede contener números'})
+        if matricula == "":
+            pass
 
-        if len(matricula) != 8:
+        elif not matricula.isdigit():
+            return JsonResponse({'error' : 'La matrícula solo puede contener números'})
+        elif len(matricula) != 8:
             return JsonResponse({'error' : 'La matrícula no tiene el tamaño correcto'})
 
         #plantel = int(matricula[2:4].lstrip('0'))
@@ -250,10 +253,13 @@ def changeView(request):
         eleccion = data['eleccion']
         turno = data['turno']
 
-        if not matricula.isdigit():
+        if matricula == "":
+            pass
+
+        elif not matricula.isdigit():
             return JsonResponse({'error' : 'La matrícula solo puede contener números'})
 
-        if len(matricula) != 8:
+        elif len(matricula) != 8:
             return JsonResponse({'error' : 'La matrícula no tiene el tamaño correcto'})
 
         #plantel = int(matricula[2:4].lstrip('0'))
@@ -324,10 +330,13 @@ def removeView(request):
         #print(data)
         matricula = data['matricula']
 
-        if not matricula.isdigit():
+        if matricula == "":
+            pass
+
+        elif not matricula.isdigit():
             return JsonResponse({'error' : 'La matrícula solo puede contener dígitos'})
 
-        if len(matricula) != 8:
+        elif len(matricula) != 8:
             return JsonResponse({'error' : 'La matrícula no tiene el tamaño correcto'})
 
         #plantel = int(matricula[2:4].lstrip('0'))
@@ -442,7 +451,8 @@ def csvGroupView(request):
 @permission_classes([IsAuthenticated])
 def changeStudentTurn(request):
     matricula = request.data['matricula']
-    student = models.Student.objects.get(matricula=matricula)
+    nombre_completo = request.data['nombre_completo']
+    student = models.Student.objects.get(matricula=matricula, nombre_completo=nombre_completo)
 
     if student.turno == "MATUTINO":
         student.turno = "VESPERTINO"

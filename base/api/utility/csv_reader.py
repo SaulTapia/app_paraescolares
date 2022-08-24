@@ -1,5 +1,6 @@
 import pandas as pd
 import unicodedata
+import re
 
 def remove_accents(input_str):
     print(f'Called with input {input_str}')
@@ -16,12 +17,15 @@ def get_plantel(matricula):
     mat = matricula[2:4].lstrip('0')
     return int(mat)
 
+def make_name(nombre_completo):
+    return re.sub(' +', ' ', nombre_completo)
+
 def file_to_students(file):
     df = pd.read_csv(file, index_col=False)
 
     #print(df.head())
     df.columns = ['apellido_paterno', 'apellido_materno', 'nombres', 'grupo', 'matricula']
-    df.fillna("",inplace=True)
+    df[['apellido_materno, apellido_materno', 'matricula']] = df[['apellido_materno, apellido_materno', 'matricula']].fillna("",inplace=True)
     df['turno'] = df['grupo'].apply(make_turn)
     df['matricula'] = df['matricula'].astype('str')
 
@@ -29,6 +33,7 @@ def file_to_students(file):
         df[column] = df[column].apply(remove_accents).str.upper()
 
     df['nombre_completo'] = df['apellido_paterno'] + ' ' + df['apellido_materno'] + ' ' + df['nombres']
+    df['nombre_completo'] = df['nombre_completo'].apply(make_name)
     df = df.drop(['apellido_materno', 'apellido_paterno', 'nombres'], axis = 1)
     #name_data = df['nombre_completo'].apply(separate_name)
     #df = pd.concat([df.drop(['nombre_completo'], axis=1), name_data.apply(pd.Series)], axis=1)
