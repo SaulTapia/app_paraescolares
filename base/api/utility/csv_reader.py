@@ -14,6 +14,8 @@ def make_turn(group):
 
 
 def get_plantel(matricula):
+    if matricula == "":
+        return 8
     mat = matricula[2:4].lstrip('0')
     return int(mat)
 
