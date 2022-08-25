@@ -209,7 +209,7 @@ def selectView(request):
         print(f'nombre: {nombre}, matrícula: {matricula}')
 
         try:
-            student = models.Student.objects.get(nombre_completo=nombre, matricula=matricula)
+            student = models.Student.objects.get(nombre_completo=nombre, matricula=matricula, plantel=plantel)
         except:
             student = None    
         
