@@ -126,12 +126,11 @@ def validateView(request):
 
         if 'matricula' in data and data['matricula']:
             matricula = str(data['matricula'])
+            if not matricula.isdigit():
+                return JsonResponse({'error' : 'La matrícula solo puede contener dígitos'})
 
-        elif not matricula.isdigit():
-            return JsonResponse({'error' : 'La matrícula solo puede contener números'})
-
-        elif len(matricula) != 8:
-            return JsonResponse({'error' : 'La matrícula no tiene el tamaño correcto'})
+            if len(matricula) != 8:
+                return JsonResponse({'error' : 'La matrícula no tiene el tamaño correcto'})
 
     
 
@@ -184,11 +183,11 @@ def selectView(request):
 
         if 'matricula' in data and data['matricula']:
             matricula = str(data['matricula'])
+            if not matricula.isdigit():
+                return JsonResponse({'error' : 'La matrícula solo puede contener dígitos'})
 
-        elif not matricula.isdigit():
-            return JsonResponse({'error' : 'La matrícula solo puede contener números'})
-        elif len(matricula) != 8:
-            return JsonResponse({'error' : 'La matrícula no tiene el tamaño correcto'})
+            if len(matricula) != 8:
+                return JsonResponse({'error' : 'La matrícula no tiene el tamaño correcto'})
 
         #plantel = int(matricula[2:4].lstrip('0'))
         plantel = 8
@@ -261,12 +260,11 @@ def changeView(request):
 
         if 'matricula' in data and data['matricula']:
             matricula = str(data['matricula'])
+            if not matricula.isdigit():
+                return JsonResponse({'error' : 'La matrícula solo puede contener dígitos'})
 
-        elif not matricula.isdigit():
-            return JsonResponse({'error' : 'La matrícula solo puede contener números'})
-
-        elif len(matricula) != 8:
-            return JsonResponse({'error' : 'La matrícula no tiene el tamaño correcto'})
+            if len(matricula) != 8:
+                return JsonResponse({'error' : 'La matrícula no tiene el tamaño correcto'})
 
         #plantel = int(matricula[2:4].lstrip('0'))
         plantel = 8
@@ -338,12 +336,12 @@ def removeView(request):
 
         if 'matricula' in data and data['matricula']:
             matricula = str(data['matricula'])
+            if not matricula.isdigit():
+                return JsonResponse({'error' : 'La matrícula solo puede contener dígitos'})
 
-        elif not matricula.isdigit():
-            return JsonResponse({'error' : 'La matrícula solo puede contener dígitos'})
+            if len(matricula) != 8:
+                return JsonResponse({'error' : 'La matrícula no tiene el tamaño correcto'})
 
-        elif len(matricula) != 8:
-            return JsonResponse({'error' : 'La matrícula no tiene el tamaño correcto'})
 
         #plantel = int(matricula[2:4].lstrip('0'))
         plantel = 8
