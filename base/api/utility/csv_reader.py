@@ -12,6 +12,8 @@ def make_turn(group):
     if group < 25: return "MATUTINO"
     else: return "VESPERTINO"
 
+def strip(stri):
+    return stri.strip(' ')
 
 def get_plantel(matricula):
     if matricula == "":
@@ -22,12 +24,14 @@ def get_plantel(matricula):
 def make_name(nombre_completo):
     return re.sub(' +', ' ', nombre_completo)
 
+
 def file_to_students(file):
     df = pd.read_csv(file, index_col=False)
 
     #print(df.head())
     df.columns = ['apellido_paterno', 'apellido_materno', 'nombres', 'grupo', 'matricula']
     df[['apellido_materno, apellido_materno', 'matricula']] = df[['apellido_materno, apellido_materno', 'matricula']].fillna("",inplace=True)
+    df[['apellido_materno, apellido_materno', 'nombres', 'grupo', 'matricula']] = df[['apellido_materno, apellido_materno', 'nombres', 'grupo', 'matricula']].apply(strip)
     df['turno'] = df['grupo'].apply(make_turn)
     df['matricula'] = df['matricula'].astype('str')
 
