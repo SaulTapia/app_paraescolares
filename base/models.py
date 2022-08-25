@@ -15,7 +15,7 @@ class Student(models.Model):
         return self.nombre_completo
 
     class Meta:
-        unique_together = ('nombre', 'grupo', 'plantel', 'matricula')
+        unique_together = ('nombre_completo', 'grupo', 'plantel', 'matricula')
 
 class Paraescolar(models.Model):    
     nombre = models.CharField(max_length=200, null=False)
