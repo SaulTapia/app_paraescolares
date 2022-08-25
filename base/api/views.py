@@ -122,8 +122,11 @@ def validateView(request):
         #print(data)
         matricula = str(data['matricula'])
 
-        if matricula == "":
-            pass
+        matricula = None
+
+        if 'matricula' in data and data['matricula']:
+            matricula = str(data['matricula'])
+
         elif not matricula.isdigit():
             return JsonResponse({'error' : 'La matrícula solo puede contener números'})
 
@@ -172,14 +175,15 @@ def selectView(request):
     try: 
         data = request.data
         #print(data)
-        matricula = data['matricula']
         apellido_paterno = data['apellido_paterno']
         apellido_materno = data['apellido_materno']
         nombres = data['nombres']
         eleccion = data['eleccion']
 
-        if matricula == "":
-            pass
+        matricula = None
+
+        if 'matricula' in data and data['matricula']:
+            matricula = str(data['matricula'])
 
         elif not matricula.isdigit():
             return JsonResponse({'error' : 'La matrícula solo puede contener números'})
@@ -249,12 +253,14 @@ def changeView(request):
     try: 
         data = request.data
         #print(data)
-        matricula = data['matricula']
+        #matricula = data['matricula']
         eleccion = data['eleccion']
         turno = data['turno']
 
-        if matricula == "":
-            pass
+        matricula = None
+
+        if 'matricula' in data and data['matricula']:
+            matricula = str(data['matricula'])
 
         elif not matricula.isdigit():
             return JsonResponse({'error' : 'La matrícula solo puede contener números'})
@@ -328,10 +334,10 @@ def removeView(request):
     try:
         data = request.data
         #print(data)
-        matricula = data['matricula']
+        matricula = None
 
-        if matricula == "":
-            pass
+        if 'matricula' in data and data['matricula']:
+            matricula = str(data['matricula'])
 
         elif not matricula.isdigit():
             return JsonResponse({'error' : 'La matrícula solo puede contener dígitos'})
