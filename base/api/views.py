@@ -231,7 +231,7 @@ def selectView(request):
                     student.save()
                     paraescolar.save()
 
-                    return JsonResponse({'message' : 'La selección fue exitosa!'})
+                    return Response(StudentSerializer(student).data)
                 else: 
                     return JsonResponse({'error' : 'Las paraescolares seleccionadas ya no cuentan con espacio.'})
             else:
