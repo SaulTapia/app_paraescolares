@@ -122,10 +122,7 @@ def validateView(request):
         #print(data)
         matricula = str(data['matricula'])
 
-        matricula = None
-
-        if 'matricula' in data and data['matricula']:
-            matricula = str(data['matricula'])
+        if data['matricula']:
             if not matricula.isdigit():
                 return JsonResponse({'error' : 'La matrícula solo puede contener dígitos'})
 
@@ -176,10 +173,8 @@ def selectView(request):
         nombres = data['nombres']
         eleccion = data['eleccion']
 
-        matricula = None
-
-        if 'matricula' in data and data['matricula']:
-            matricula = str(data['matricula'])
+        matricula = str(data['matricula'])
+        if data['matricula']:
             if not matricula.isdigit():
                 return JsonResponse({'error' : 'La matrícula solo puede contener dígitos'})
 
@@ -250,10 +245,9 @@ def changeView(request):
         eleccion = data['eleccion']
         turno = data['turno']
 
-        matricula = None
+        matricula = str(data['matricula'])
 
-        if 'matricula' in data and data['matricula']:
-            matricula = str(data['matricula'])
+        if data['matricula']:
             if not matricula.isdigit():
                 return JsonResponse({'error' : 'La matrícula solo puede contener dígitos'})
 
@@ -323,10 +317,9 @@ def removeView(request):
     try:
         data = request.data
         #print(data)
-        matricula = None
 
-        if 'matricula' in data and data['matricula']:
-            matricula = str(data['matricula'])
+        matricula = str(data['matricula'])
+        if data['matricula']:
             if not matricula.isdigit():
                 return JsonResponse({'error' : 'La matrícula solo puede contener dígitos'})
 
