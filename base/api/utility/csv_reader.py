@@ -8,7 +8,7 @@ def remove_accents(input_str):
     return u"".join([c for c in nfkd_form if not unicodedata.combining(c)])
 
 def make_turn(group):
-    group = group % 100
+    group = int(group) % 100
     if group < 25: return "MATUTINO"
     else: return "VESPERTINO"
 
@@ -28,12 +28,22 @@ def make_name(nombre_completo):
 def file_to_students(file):
     df = pd.read_csv(file, index_col=False)
 
-    #print(df.head())
     df.columns = ['apellido_paterno', 'apellido_materno', 'nombres', 'grupo', 'matricula']
-    df[['apellido_materno, apellido_materno', 'matricula']] = df[['apellido_materno, apellido_materno', 'matricula']].fillna("",inplace=True)
-    df[['apellido_materno, apellido_materno', 'nombres', 'grupo', 'matricula']] = df[['apellido_materno, apellido_materno', 'nombres', 'grupo', 'matricula']].apply(strip)
-    df['turno'] = df['grupo'].apply(make_turn)
     df['matricula'] = df['matricula'].astype('str')
+    df['grupo'] = df['grupo'].astype('str')
+    print(df.head())
+    df.fillna("", inplace=True)
+
+    print(df)
+
+    df['apellido_paterno'] = df['apellido_paterno'].apply(strip)
+    df['apellido_materno'] = df['apellido_materno'].apply(strip)
+    df['nombres'] = df['nombres'].apply(strip)
+    df['grupo'] = df['grupo'].apply(strip)
+    df['matricula'] = df['matricula'].apply(strip)
+    df['turno'] = df['grupo'].apply(make_turn)
+
+    
 
     for column in ['nombres', 'apellido_paterno', 'apellido_materno']:
         df[column] = df[column].apply(remove_accents).str.upper()
