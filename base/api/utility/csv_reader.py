@@ -27,17 +27,25 @@ def get_plantel(matricula):
 def make_name(nombre_completo):
     return re.sub(' +', ' ', nombre_completo)
 
+def remove_dot(mat):
+    #print(f'returning {mat.split(".")[0]}')
+    return mat.split('.')[0]
 
 def file_to_students(file):
     df = pd.read_csv(file, index_col=False)
 
     df.columns = ['apellido_paterno', 'apellido_materno', 'nombres', 'grupo', 'matricula']
     df.fillna("", inplace=True)
+    #print("AAAAAAAAa")
     df['matricula'] = df['matricula'].astype('str')
-    df['grupo'] = df['grupo'].astype('str')
-    print(df.head())
+    df['matricula'] = df['matricula'].apply(remove_dot)
 
-    print(df)
+    #print("CCCCCCCCCCCC")
+    
+    df['grupo'] = df['grupo'].astype('str')
+    #print(df.head())
+
+    #print(df)
 
     df['apellido_paterno'] = df['apellido_paterno'].apply(strip)
     df['apellido_materno'] = df['apellido_materno'].apply(strip)
