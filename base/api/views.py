@@ -89,7 +89,7 @@ class FileUploadView(api_views.APIView):
             student_list = file_to_students(file_obj)
             
             for student in student_list:
-                #print(f'Get student {student}')
+                print(f'Get student {student}')
                 models.Student.objects.get_or_create(**student)
 
             return JsonResponse({'message' : 'Alumnos agregados con éxito!'})
@@ -129,9 +129,6 @@ def validateView(request):
             matricula = str(data['matricula'])
             if not matricula.isdigit():
                 return JsonResponse({'error' : 'La matrícula solo puede contener dígitos'})
-
-            if len(matricula) != 8:
-                return JsonResponse({'error' : 'La matrícula no tiene el tamaño correcto'})
 
     
 
@@ -186,9 +183,6 @@ def selectView(request):
             matricula = str(data['matricula'])
             if not matricula.isdigit():
                 return JsonResponse({'error' : 'La matrícula solo puede contener dígitos'})
-
-            if len(matricula) != 8:
-                return JsonResponse({'error' : 'La matrícula no tiene el tamaño correcto'})
 
         #plantel = int(matricula[2:4].lstrip('0'))
         plantel = 8
@@ -264,9 +258,6 @@ def changeView(request):
             if not matricula.isdigit():
                 return JsonResponse({'error' : 'La matrícula solo puede contener dígitos'})
 
-            if len(matricula) != 8:
-                return JsonResponse({'error' : 'La matrícula no tiene el tamaño correcto'})
-
         #plantel = int(matricula[2:4].lstrip('0'))
         plantel = 8
 
@@ -339,9 +330,6 @@ def removeView(request):
             matricula = str(data['matricula'])
             if not matricula.isdigit():
                 return JsonResponse({'error' : 'La matrícula solo puede contener dígitos'})
-
-            if len(matricula) != 8:
-                return JsonResponse({'error' : 'La matrícula no tiene el tamaño correcto'})
 
 
         #plantel = int(matricula[2:4].lstrip('0'))
