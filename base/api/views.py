@@ -87,10 +87,9 @@ class FileUploadView(api_views.APIView):
         try:
             file_obj = request.data['file']
             student_list = file_to_students(file_obj)
-            
-            for student in student_list:
-                print(f'Get student {student}')
-                models.Student.objects.get_or_create(**student)
+
+            obj_list = [models.Student(**student_dict) for student_dict in student_list]
+            models.Student.objects.bulk_create(obj_list,ignore_conflicts=True)
 
             return JsonResponse({'message' : 'Alumnos agregados con éxito!'})
         except Exception as e:

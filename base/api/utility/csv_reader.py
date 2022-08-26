@@ -36,6 +36,7 @@ def file_to_students(file):
 
     df.columns = ['apellido_paterno', 'apellido_materno', 'nombres', 'grupo', 'matricula']
     df.fillna("", inplace=True)
+    print(f'All different groups: {df.grupo.unique()}')
     #print("AAAAAAAAa")
     df['matricula'] = df['matricula'].astype('str')
     df['matricula'] = df['matricula'].apply(remove_dot)
@@ -67,6 +68,7 @@ def file_to_students(file):
     
     df['plantel'] = df['matricula'].apply(get_plantel)
 
+    print(f'All different groups after processing: {df.grupo.unique()}')
     #print(df.head())
     dict = df.to_dict('records')
     return dict
