@@ -89,7 +89,7 @@ class FileUploadView(api_views.APIView):
             student_list = file_to_students(file_obj)
             
             for student in student_list:
-                #print(f'Get student {student}')
+                print(f'Get student {student}')
                 models.Student.objects.get_or_create(**student)
 
             return JsonResponse({'message' : 'Alumnos agregados con éxito!'})
